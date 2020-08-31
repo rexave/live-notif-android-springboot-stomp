@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Proto Notification</string>
+    <string name="input_message">Entrez votre message</string>
+    <string name="button_send">Envoyer</string>
+</resources>

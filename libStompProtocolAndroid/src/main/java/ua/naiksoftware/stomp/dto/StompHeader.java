@@ -12,6 +12,7 @@ public class StompHeader {
     public static final String MESSAGE_ID = "message-id";
     public static final String ID = "id";
     public static final String ACK = "ack";
+    public static final String SUBSCRIPTION = "subscription";
 
     private final String mKey;
     private final String mValue;

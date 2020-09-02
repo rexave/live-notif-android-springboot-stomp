@@ -1,8 +1,8 @@
 package ua.naiksoftware.stomp;
 
 import android.annotation.SuppressLint;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -238,9 +238,7 @@ public class StompClient {
     }
 
     public Flowable<StompMessage> topic(@NonNull String destPath, List<StompHeader> headerList) {
-        if (destPath == null)
-            return Flowable.error(new IllegalArgumentException("Topic path cannot be null"));
-        else if (!streamMap.containsKey(destPath))
+        if (!streamMap.containsKey(destPath))
             streamMap.put(destPath,
                     Completable.defer(() -> subscribePath(destPath, headerList)).andThen(
                     getMessageStream()

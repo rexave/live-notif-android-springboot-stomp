@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -86,8 +87,12 @@ public class StompMessage {
             matcher.find();
             headers.add(new StompHeader(matcher.group(1), matcher.group(2)));
         }
+        try {
 
-        reader.skip("\n\n");
+            reader.skip("\n\n");
+        } catch (NoSuchElementException e) {
+            //do nothing
+        }
 
         reader.useDelimiter(TERMINATE_MESSAGE_SYMBOL);
         String payload = reader.hasNext() ? reader.next() : null;

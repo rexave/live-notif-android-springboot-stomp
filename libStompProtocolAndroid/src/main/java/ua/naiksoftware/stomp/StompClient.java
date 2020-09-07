@@ -1,8 +1,10 @@
 package ua.naiksoftware.stomp;
 
 import android.annotation.SuppressLint;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -241,11 +243,11 @@ public class StompClient {
         if (!streamMap.containsKey(destPath))
             streamMap.put(destPath,
                     Completable.defer(() -> subscribePath(destPath, headerList)).andThen(
-                    getMessageStream()
-                            .filter(msg -> pathMatcher.matches(destPath, msg))
-                            .toFlowable(BackpressureStrategy.BUFFER)
-                            .doFinally(() -> unsubscribePath(destPath).subscribe())
-                            .share())
+                            getMessageStream()
+//                                    .filter(msg -> pathMatcher.matches(destPath, msg))
+                                    .toFlowable(BackpressureStrategy.BUFFER)
+                                    .doFinally(() -> unsubscribePath(destPath).subscribe())
+                                    .share())
             );
         return streamMap.get(destPath);
     }
@@ -323,10 +325,13 @@ public class StompClient {
     public void setLegacyWhitespace(boolean legacyWhitespace) {
         this.legacyWhitespace = legacyWhitespace;
     }
-    
-    /** returns the to topic (subscription id) corresponding to a given destination  
+
+    /**
+     * returns the to topic (subscription id) corresponding to a given destination
+     *
      * @param dest the destination
-     * @return the topic (subscription id) or null if no topic corresponds to the destination */
+     * @return the topic (subscription id) or null if no topic corresponds to the destination
+     */
     public String getTopicId(String dest) {
         return topics.get(dest);
     }

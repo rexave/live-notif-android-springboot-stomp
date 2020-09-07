@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true));
 
-        mStompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "wss://" + ANDROID_EMULATOR_LOCALHOST
-                + ":" + RestClient.SERVER_PORT + "/topic/couleur");
+        String uri = "wss://" + ANDROID_EMULATOR_LOCALHOST + ":" + RestClient.SERVER_PORT + "/websocket-vanilla";
+        mStompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, uri);
 
         resetSubscriptions();
     }
@@ -74,10 +74,8 @@ public class MainActivity extends AppCompatActivity {
     public void connectStomp(View view) {
 
         List<StompHeader> headers = new ArrayList<>();
-        headers.add(new StompHeader(LOGIN, "guest"));
-        headers.add(new StompHeader(PASSCODE, "guest"));
 
-        mStompClient.withClientHeartbeat(1000).withServerHeartbeat(1000);
+        mStompClient.withClientHeartbeat(10000).withServerHeartbeat(10000);
 
         resetSubscriptions();
 
@@ -106,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         compositeDisposable.add(dispLifecycle);
 
         // Receive greetings
-        Disposable dispTopic = mStompClient.topic("/topic/greetings")
+        Disposable dispTopic = mStompClient.topic("/topic/couleurs")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(topicMessage -> {

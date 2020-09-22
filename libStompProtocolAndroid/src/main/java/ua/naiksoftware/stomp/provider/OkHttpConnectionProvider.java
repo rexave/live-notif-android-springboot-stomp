@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.util.Log;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -80,8 +81,11 @@ public class OkHttpConnectionProvider extends AbstractConnectionProvider {
 
                     @Override
                     public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+                        Exception exception = new Exception(t);
+                        Log.e(TAG, "erreur");
+                        t.printStackTrace();
                         // in OkHttp, a Failure is equivalent to a JWS-Error *and* a JWS-Close
-                        emitLifecycleEvent(new LifecycleEvent(LifecycleEvent.Type.ERROR, new Exception(t)));
+                        emitLifecycleEvent(new LifecycleEvent(LifecycleEvent.Type.ERROR, exception));
                         openSocket = null;
                         emitLifecycleEvent(new LifecycleEvent(LifecycleEvent.Type.CLOSED));
                     }

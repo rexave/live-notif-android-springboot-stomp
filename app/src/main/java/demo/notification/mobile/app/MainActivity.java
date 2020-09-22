@@ -1,10 +1,12 @@
 package demo.notification.mobile.app;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import demo.notification.mobile.app.dto.MessagePub;
 import io.reactivex.CompletableTransformer;
@@ -45,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private Gson mGson = new GsonBuilder().create();
     private CompositeDisposable compositeDisposable;
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true));
 
         String uri = "wss://" + ANDROID_EMULATOR_LOCALHOST + ":" + RestClient.SERVER_PORT + "/websocket-vanilla";
-        mStompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, uri);
+        Map<String, String> parametres = Map.of("Cookie", "JSESSIONID=DFE9711EDD07BBDF5016284435BB78D1");
+        mStompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, uri, parametres);
 
         resetSubscriptions();
     }
@@ -104,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         compositeDisposable.add(dispLifecycle);
 
         // Receive greetings
-        Disposable dispTopic = mStompClient.topic("/topic/pubmessage")
+        Disposable dispTopic = mStompClient.topic("/topic/prive")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(topicMessage -> {

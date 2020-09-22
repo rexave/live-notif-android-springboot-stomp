@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import demo.notification.mobile.app.dto.EchoModel;
+import demo.notification.mobile.app.dto.MessagePub;
 import io.reactivex.CompletableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -104,12 +104,12 @@ public class MainActivity extends AppCompatActivity {
         compositeDisposable.add(dispLifecycle);
 
         // Receive greetings
-        Disposable dispTopic = mStompClient.topic("/topic/couleurs")
+        Disposable dispTopic = mStompClient.topic("/topic/pubmessage")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(topicMessage -> {
                     Log.d(TAG, "Received " + topicMessage.getPayload());
-                    addItem(mGson.fromJson(topicMessage.getPayload(), EchoModel.class));
+                    addItem(mGson.fromJson(topicMessage.getPayload(), MessagePub.class));
                 }, throwable -> {
                     Log.e(TAG, "Error on subscribe topic", throwable);
                 });
@@ -143,8 +143,8 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void addItem(EchoModel echoModel) {
-        mDataSet.add(echoModel.getEcho() + " - " + mTimeFormat.format(new Date()));
+    private void addItem(MessagePub messagePub) {
+        mDataSet.add(messagePub.getContenu() + " - " + mTimeFormat.format(new Date()));
         mAdapter.notifyDataSetChanged();
         mRecyclerView.smoothScrollToPosition(mDataSet.size() - 1);
     }
